@@ -1,3 +1,4 @@
+import { use } from "react";
 import Listing from "../models/listingModel.js";
 import User from "../models/userModel.js";
 import errorHandler from "../utils/error.js";
@@ -67,4 +68,18 @@ export const getUserListing = async(req,res,next)=>{
     return next(errorHandler(401,'you can only view your own listing!'))
   }
 
+}
+
+export const getUser = async (req,res,next)=>{
+  try {
+    const user = await User.findById(req.params.id);
+  
+  if(!user) return next(errorHandler(404,"User not found"));
+
+  const {password:pass, ...rest} = user._doc;
+  } catch (error) {
+    next(error);
+  }
+
+  res.status(200).json(rest);
 }

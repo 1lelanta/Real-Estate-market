@@ -1,9 +1,7 @@
 import React from 'react'
 
-const Contact = () => {
-  return (
-    <div>Contact</div>
+export default function Contact({listing}){
+  return(
+    <div></div>
   )
 }
-
-export default Contact
