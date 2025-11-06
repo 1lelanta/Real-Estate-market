@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import {Link} from 'react-redux';
+import {Link} from 'react-router-dom';
 
 export default function Contact({listing}){
   const [landlord, setLandlord] = useState(null);
@@ -22,7 +22,7 @@ export default function Contact({listing}){
     
   },[listing.userRef])
 
-   
+
   return(
     <>
     {landlord &&(
@@ -39,6 +39,5 @@ export default function Contact({listing}){
       </Link>
     </div>
     )}
-    
     </>
   )}
