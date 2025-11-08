@@ -2,10 +2,10 @@ import express from 'express'
 import mongoose from 'mongoose'
 import cors from 'cors'
 import dotenv from 'dotenv'
-import userRoute from './routes/userRoute.js'
-import authRoute from './routes/signupUser.js'
+import userRoute from './routes/user.route.js'
+import authRoute from './routes/signup.route.js'
 import cookieParser from 'cookie-parser';
-import listingRouter from './routes/listingRoute.js'
+import listingRouter from './routes/listing.route.js'
 
 dotenv.config()
 const app = express()
