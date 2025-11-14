@@ -14,10 +14,24 @@ export default function Home() {
         const data = res.json();
 
         setOfferListing(data);
+        fetchRentListings();
       } catch (error) {
         console.log(error)
       }
     }
+    const fetchRentListings = async()=>{
+      try {
+        const res = fetch('api/listing/get?type=rent&limit=4');
+        const data = await res.json();
+        setRentListings(data);
+        fetchSaleListings()
+      } catch (error) {
+        console.log(error)
+      }
+    }
+
+    
+
     fetchOfferListings();
 
   },[]);
