@@ -30,6 +30,15 @@ export default function Home() {
       }
     }
 
+    const fetchSaleListings=async()=>{
+      try {
+        const res = fetch('api/listing/get?type=sale&limit=4');
+        const data = await res.json();
+        setSaleListings(data);
+      } catch (error) {
+        console.log(error)
+      }
+    }
     
 
     fetchOfferListings();
