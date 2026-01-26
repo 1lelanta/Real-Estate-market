@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom';
-import ListingItems from '../components/listingItems';
+import ListingItems from '../components/ListingItems';
 
 export const Search = () => {
     const navigate = useNavigate();
