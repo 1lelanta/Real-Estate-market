@@ -1,18 +1,26 @@
 import React, { useState } from 'react'
-import { Link,useNavigate } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import OAuth from '../components/OAuth'
 
+// Backend URL from environment variable
+const BACKEND_URL = import.meta.env.VITE_BACKEND_URL
+
+// Helper fetch function
+const apiFetch = async (path, options = {}) => {
+  const res = await fetch(`${BACKEND_URL}${path}`, options)
+  return res.json()
+}
 
 const SignUp = () => {
   const [formData, setFormData] = useState({})
   const [error, setError] = useState(null)
   const [loading, setLoading] = useState(false)
-  const navigate = useNavigate();
+  const navigate = useNavigate()
 
   const handleChange = (e) => {
     setFormData({
       ...formData,
-      [e.target.id]: e.target.value
+      [e.target.id]: e.target.value,
     })
   }
 
@@ -20,25 +28,25 @@ const SignUp = () => {
     e.preventDefault()
     try {
       setLoading(true)
-      const res = await fetch('/api/auth/signup', {
+      const data = await apiFetch('/auth/signup', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(formData)
+        body: JSON.stringify(formData),
+        credentials: 'include', // if backend uses cookies
       })
-      const data = await res.json()
+
       setLoading(false)
       if (data.success === false) {
-        setLoading(false)
         setError(data.message)
         return
       }
-      setLoading(false)
+
       setError(null)
       navigate('/sign-in')
-    } catch (error) {
+    } catch (err) {
       setLoading(false)
       setError('Something went wrong')
-      console.log(error)
+      console.error(err)
     }
   }
 
@@ -67,10 +75,13 @@ const SignUp = () => {
           onChange={handleChange}
           className='border p-3 rounded-lg'
         />
-        <button disabled={loading} className='bg-slate-700 text-white p-3 rounded-lg uppercase hover:opacity-95'>
+        <button
+          disabled={loading}
+          className='bg-slate-700 text-white p-3 rounded-lg uppercase hover:opacity-95'
+        >
           {loading ? 'loading' : 'Sign Up'}
         </button>
-        <OAuth/>
+        <OAuth />
       </form>
       <div className='flex gap-2 mt-5'>
         <p>Have an account?</p>

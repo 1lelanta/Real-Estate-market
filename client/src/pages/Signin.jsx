@@ -1,40 +1,51 @@
 import React, { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
-import { useDispatch, useSelector } from 'react-redux';
-import { signInStart, signInSuccess, signInFailure } from '../redux/user/userSlice';
-import OAuth from '../components/OAuth';
+import { useDispatch, useSelector } from 'react-redux'
+import { signInStart, signInSuccess, signInFailure } from '../redux/user/userSlice'
+import OAuth from '../components/OAuth'
+
+// Backend URL from environment variable
+const BACKEND_URL = import.meta.env.VITE_BACKEND_URL
+
+// Helper fetch function
+const apiFetch = async (path, options = {}) => {
+  const res = await fetch(`${BACKEND_URL}${path}`, options)
+  return res.json()
+}
 
 const SignIn = () => {
   const [formData, setFormData] = useState({})
   const { loading, error } = useSelector((state) => state.user)
-  const navigate = useNavigate();
-  const dispatch = useDispatch();
+  const navigate = useNavigate()
+  const dispatch = useDispatch()
 
   const handleChange = (e) => {
     setFormData({
       ...formData,
-      [e.target.id]: e.target.value
+      [e.target.id]: e.target.value,
     })
   }
 
   const handleSubmit = async (e) => {
     e.preventDefault()
     try {
-      dispatch(signInStart());
-      const res = await fetch('/api/auth/signin', {
+      dispatch(signInStart())
+      const data = await apiFetch('/auth/signin', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(formData)
+        body: JSON.stringify(formData),
+        credentials: 'include', // if your backend uses cookies
       })
-      const data = await res.json()
+
       if (data.success === false) {
-        dispatch(signInFailure(data.message));
+        dispatch(signInFailure(data.message))
         return
       }
-      dispatch(signInSuccess(data));
+
+      dispatch(signInSuccess(data))
       navigate('/')
-    } catch (error) {
-      dispatch(signInFailure(error.message))
+    } catch (err) {
+      dispatch(signInFailure(err.message))
     }
   }
 
@@ -56,13 +67,16 @@ const SignIn = () => {
           onChange={handleChange}
           className='border p-3 rounded-lg'
         />
-        <button disabled={loading} className='bg-slate-700 text-white p-3 rounded-lg uppercase hover:opacity-95'>
+        <button
+          disabled={loading}
+          className='bg-slate-700 text-white p-3 rounded-lg uppercase hover:opacity-95'
+        >
           {loading ? 'loading' : 'Sign In'}
         </button>
-        <OAuth/>
+        <OAuth />
       </form>
       <div className='flex gap-2 mt-5'>
-        <p>dont have an account?</p>
+        <p>Don't have an account?</p>
         <Link to='/sign-up'>
           <span className='text-blue-700'>Sign Up</span>
         </Link>
