@@ -1,6 +1,5 @@
-import React, { useState } from 'react'
+import React, { useRef, useState } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
-import { Link } from 'react-router-dom'
 import {
   deleteUserFailure,
   deleteUserStart,
@@ -12,8 +11,9 @@ import {
   updateUserStart,
   updateUserSuccess
 } from '../redux/user/userSlice'
+import { Link } from 'react-router-dom'
 
-// Backend helper
+// Helper function to call backend
 const BACKEND_URL = import.meta.env.VITE_BACKEND_URL
 const apiFetch = async (path, options = {}) => {
   const res = await fetch(`${BACKEND_URL}${path}`, options)
@@ -21,6 +21,7 @@ const apiFetch = async (path, options = {}) => {
 }
 
 export default function Profile() {
+  const fileRef = useRef(null)
   const dispatch = useDispatch()
   const [updateSuccess, setUpdateSuccess] = useState(false)
   const { currentUser, loading, error } = useSelector((state) => state.user)
@@ -127,16 +128,16 @@ export default function Profile() {
     <div className='p-3 max-w-lg mx-auto'>
       <h1 className='text-3xl font-semibold text-center my-7'>Profile</h1>
 
-      {/* Profile Image as link */}
-      <Link to="/profile">
+      <form className='flex flex-col gap-4' onSubmit={handleSubmit}>
+        <input type='file' ref={fileRef} hidden accept='image/*' />
+
         <img
+          onClick={() => fileRef.current.click()}
           className='rounded-full h-24 w-24 object-cover cursor-pointer self-center mt-2'
-          src={currentUser.avatar || '/default-avatar.png'}
+          src={currentUser.avatar}
           alt='profile'
         />
-      </Link>
 
-      <form className='flex flex-col gap-4 mt-4' onSubmit={handleSubmit}>
         <input
           type='text'
           placeholder='Username'
@@ -192,14 +193,14 @@ export default function Profile() {
       <p className='text-red-700 mt-5'>{error ? error : ''}</p>
       <p className='text-green-700 mt-5'>{updateSuccess ? 'User updated successfully!' : ''}</p>
 
-      <button onClick={handleShowListing} className='text-green-700 w-full mt-4'>
+      <button onClick={handleShowListing} className='text-green-700 w-full'>
         Show Listings
       </button>
-      <p className='text-red-700 mt-2'>{showListingError ? 'Error showing listings' : ''}</p>
+      <p className='text-red-700 mt-5'>{showListingError ? 'Error showing listings' : ''}</p>
 
       {userListing?.length > 0 &&
         userListing.map((listing) => (
-          <div key={listing._id} className='flex flex-col gap-4 mt-4'>
+          <div key={listing._id} className='flex flex-col gap-4'>
             <h1 className='text-center my-7 text-2xl'>Your Listing</h1>
             <div className='border rounded-lg p-3 flex justify-between items-center'>
               <Link to={`/listing/${listing._id}`}>

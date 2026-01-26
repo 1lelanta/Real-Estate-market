@@ -121,7 +121,7 @@ const CreateListing = () => {
       return;
     }
 
-    navigate(`/listing/${data._id}`); // ✅ should work
+    navigate(`/listing/${data._id}`);
   } catch (err) {
     console.error("Submit error:", err);
     setError(err.message);
