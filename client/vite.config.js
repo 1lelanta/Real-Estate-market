@@ -5,7 +5,7 @@ export default defineConfig({
   server: {
     proxy: {
       '/api': {
-        target: 'http://localhost:300 https://real-estate-market-tggk.onrender.com',
+        target: 'https://real-estate-market-tggk.onrender.com',
         changeOrigin: true,
         secure: false,
       },
