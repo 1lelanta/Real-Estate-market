@@ -1,3 +1,5 @@
+import React from "react";
+
 const Footer = () => {
   return (
     <footer className="bg-slate-900 text-slate-300">
@@ -6,7 +8,7 @@ const Footer = () => {
         {/* Brand */}
         <div>
           <h2 className="text-2xl font-bold text-white mb-3">
-            RealEstate Market
+            Lelanta Estate Market
           </h2>
           <p className="text-sm leading-relaxed">
             Your trusted platform to buy, sell, and rent properties with ease.
