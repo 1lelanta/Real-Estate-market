@@ -1,3 +1,19 @@
+import React, { useEffect, useState } from 'react';
+import { Link } from 'react-router-dom';
+import { Swiper, SwiperSlide } from 'swiper/react';
+import 'swiper/css/bundle';
+import { Navigation } from 'swiper/modules';
+import SwiperCore from 'swiper';
+import ListingItems from '../components/ListingItems';
+import Footer from '../components/Footer';
+
+const BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
+
+const apiFetch = async (path) => {
+  const res = await fetch(`${BACKEND_URL}${path}`);
+  return res.json();
+};
+
 export default function Home() {
   const [offerListing, setOfferListing] = useState([]);
   const [saleListings, setSaleListings] = useState([]);
@@ -146,6 +162,7 @@ export default function Home() {
           )}
         </div>
       </div>
+
       <Footer />
     </>
   );
