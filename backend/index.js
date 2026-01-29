@@ -12,9 +12,9 @@ const app = express()
 
 
 app.use(cors({
-  origin: true,       
+  origin: "https://real-estate-market-3f4n.vercel.app", 
   credentials: true  
-}))
+}));
 
 app.use(express.json())
 app.use(cookieParser())
