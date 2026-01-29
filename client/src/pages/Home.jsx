@@ -5,6 +5,7 @@ import 'swiper/css/bundle';
 import { Navigation } from 'swiper/modules';
 import SwiperCore from 'swiper';
 import ListingItems from '../components/ListingItems';
+import Footer from '../components/Footer';
 
 const BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
 
@@ -148,4 +149,6 @@ export default function Home() {
       </div>
     </div>
   );
+
+  <Footer/>
 }
