@@ -3,6 +3,8 @@ import { supabase } from "../supabase.js";
 import { useSelector } from "react-redux";
 import {useNavigate} from 'react-router-dom';
 
+const BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
+
 const CreateListing = () => {
   const navigate = useNavigate();
   const { currentUser } = useSelector((state) => state.user);
@@ -100,7 +102,7 @@ const CreateListing = () => {
     if (formData.regularPrice < formData.discountPrice)
       return setError("Discount price must be less than regular price");
 
-    const res = await fetch("/api/listing/create", {
+    const res = await fetch(`${BACKEND_URL}/api/listing/create`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
