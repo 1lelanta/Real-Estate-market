@@ -20,6 +20,14 @@ const userSchema = new mongoose.Schema({
         default:"https://images.pexels.com/photos/415829/pexels-photo-415829.jpeg"
 
     },
+    resetPasswordToken: {
+        type: String,
+        default: null,
+    },
+    resetPasswordExpires: {
+        type: Date,
+        default: null,
+    },
 
 
 },{timestamps:true});
