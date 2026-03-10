@@ -4,8 +4,8 @@ import { useNavigate, useLocation } from 'react-router-dom'
 import ListingItems from '../components/ListingItems'
 import LoadingSpinner from '../components/LoadingSpinner'
 
-// Backend URL from environment variable
-const BACKEND_URL = import.meta.env.VITE_BACKEND_URL
+// Backend URL from environment variable (default to '/api' for local dev)
+const BACKEND_URL = import.meta.env.VITE_BACKEND_URL || '/api'
 
 // Helper for fetch requests
 // Helper for fetch requests - safe JSON parsing and error handling
