@@ -124,10 +124,13 @@ export const Search = () => {
   }
 
   const onShowMorClick = async () => {
+    if (isFetchingRef.current) return
     const startIndex = listing.length
     const urlParams = new URLSearchParams(location.search)
     urlParams.set('startIndex', startIndex)
     try {
+      isFetchingRef.current = true
+      setLoading(true)
       const data = await apiFetch(`/listing/get?${urlParams.toString()}`)
       const items = data.listings ?? data
       const totalCount = data.total ?? null
@@ -141,13 +144,16 @@ export const Search = () => {
       }
     } catch (err) {
       console.error(err)
+    } finally {
+      setLoading(false)
+      isFetchingRef.current = false
     }
   }
 
   // Infinite scroll: fetch more when near bottom
   useEffect(() => {
     const onScroll = () => {
-      if (loading || !showmore) return
+      if (isFetchingRef.current || !showmore) return
       if (window.innerHeight + window.scrollY >= document.body.offsetHeight - 300) {
         onShowMorClick()
       }
@@ -155,7 +161,7 @@ export const Search = () => {
 
     window.addEventListener('scroll', onScroll)
     return () => window.removeEventListener('scroll', onScroll)
-  }, [loading, showmore, listing])
+  }, [showmore, listing])
 
   return (
     <div className='flex flex-col md:flex-row'>
@@ -235,7 +241,7 @@ export const Search = () => {
             <p className='text-sm text-slate-700 w-full'>Showing {listing.length} of {total} results</p>
           )}
           {!loading && listing.length === 0 && <p className='text-lg text-slate-700'>No Listing found</p>}
-          {loading && <p className='text-xl text-slate-700 text-center w-full'>Loading...</p>}
+          {loading && <LoadingSpinner />}
           {!loading && listing && listing.map((item) => <ListingItems key={item._id} listing={item} />)}
           {showmore && (
             <button
