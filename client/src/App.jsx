@@ -11,6 +11,7 @@ import CreateListing from './pages/CreateListing'
 import UpdateListing from './pages/UpdateListing'
 import Listing from './pages/Listing'
 import { Search } from './pages/Search'
+import ForgotPassword from './pages/ForgotPassword'
 
 const App = () => {
   return (
@@ -21,6 +22,7 @@ const App = () => {
       <Route path="/sign-in" element={<Signin/>}/>
       <Route path="/sign-up" element={<SignUp/>}/>
       <Route path='/about' element={<About/>}/>
+      <Route path='/forgot-password' element={<ForgotPassword/>}/>
       <Route path='/search' element={<Search/>}/>
       <Route path='/listing/:listingId' element={<Listing/>}/>
       <Route element={<PrivateRoute/>}>
