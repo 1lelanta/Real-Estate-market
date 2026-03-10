@@ -3,8 +3,8 @@ import { Link, useNavigate } from 'react-router-dom'
 import OAuth from '../components/OAuth'
 import LoadingSpinner from '../components/LoadingSpinner'
 
-// Backend URL from environment variable
-const BACKEND_URL = import.meta.env.VITE_BACKEND_URL
+// Backend URL from environment variable (default to '/api' for local dev)
+const BACKEND_URL = import.meta.env.VITE_BACKEND_URL || '/api'
 
 // Helper fetch function - safe JSON parsing and error handling
 const apiFetch = async (path, options = {}) => {
