@@ -12,10 +12,13 @@ const app = express()
 app.set("trust proxy", 1);
 
 
+const CLIENT_ORIGIN = process.env.CLIENT_URL || 'http://localhost:5173'
 app.use(cors({
-  origin: "https://real-estate-market-3f4n.vercel.app", 
-  credentials: true  
+  origin: CLIENT_ORIGIN,
+  credentials: true,
 }));
+
+console.log('CORS origin set to', CLIENT_ORIGIN)
 
 app.use(express.json())
 app.use(cookieParser())
