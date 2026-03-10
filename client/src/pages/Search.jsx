@@ -5,7 +5,7 @@ import ListingItems from '../components/ListingItems'
 import LoadingSpinner from '../components/LoadingSpinner'
 
 // Backend URL from environment variable (default to '/api' for local dev)
-const BACKEND_URL = import.meta.env.VITE_BACKEND_URL || '/api'
+const BACKEND_URL = import.meta.env.VITE_BACKEND_URL || 'http://localhost:3000/api'
 
 // Helper for fetch requests
 // Helper for fetch requests - safe JSON parsing and error handling
