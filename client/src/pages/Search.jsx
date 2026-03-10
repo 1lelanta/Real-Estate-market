@@ -1,4 +1,5 @@
 import React, { useEffect, useState, useRef } from 'react'
+import { FiChevronLeft, FiChevronRight } from 'react-icons/fi'
 import { useNavigate, useLocation } from 'react-router-dom'
 import ListingItems from '../components/ListingItems'
 import LoadingSpinner from '../components/LoadingSpinner'
@@ -183,7 +184,7 @@ export const Search = () => {
 
   return (
     <div className='flex flex-col md:flex-row'>
-      <aside className='p-4 md:p-7 border-b md:border-r md:min-h-screen md:w-80'>
+      <aside className='p-4 md:p-7 border-b md:min-h-screen md:w-80'>
         <div className='flex items-center justify-between mb-4'>
           <h3 className='font-semibold text-lg'>Filters</h3>
           <div className='flex items-center gap-2'>
@@ -259,6 +260,32 @@ export const Search = () => {
           </form>
         </div>
       </aside>
+
+      {/* Decorative separator (vertical on desktop, horizontal compact on mobile) */}
+      <div className='flex items-center'>
+        {/* desktop vertical separator with toggle */}
+        <div className='hidden md:flex items-stretch'>
+          <div className='relative h-full flex items-center'>
+            <div className='w-px bg-gradient-to-b from-slate-200 via-slate-400 to-slate-200 h-full' />
+            <button
+              aria-label='toggle filters'
+              onClick={() => setFiltersOpen((s) => !s)}
+              className='absolute left-[-12px] top-1/2 transform -translate-y-1/2 bg-white border rounded-full p-1 shadow-sm'
+            >
+              {filtersOpen ? <FiChevronLeft className='text-slate-600' /> : <FiChevronRight className='text-slate-600' />}
+            </button>
+          </div>
+        </div>
+
+        {/* mobile horizontal separator with small Filters button */}
+        <div className='md:hidden flex items-center w-full px-4'>
+          <hr className='flex-1 border-t border-slate-200' />
+          <button onClick={() => setFiltersOpen((s) => !s)} className='mx-3 text-sm bg-white px-3 py-1 rounded-full border text-slate-600 shadow-sm'>
+            Filters
+          </button>
+          <hr className='flex-1 border-t border-slate-200' />
+        </div>
+      </div>
 
       <div className='flex-1'>
         <div className='flex items-center justify-between border-b p-3 mt-5'>
