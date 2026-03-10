@@ -89,18 +89,22 @@ export const getListings = async (req, res, next) => {
     const sort = req.query.sort || "createdAt";
     const order = req.query.order || "desc";
 
-    const listings = await Listing.find({
+    const filter = {
       name: { $regex: searchTerm, $options: "i" },
       offer,
       furnished,
       parking,
       type,
-    })
+    }
+
+    const total = await Listing.countDocuments(filter)
+
+    const listings = await Listing.find(filter)
       .sort({ [sort]: order })
       .limit(limit)
       .skip(startIndex);
 
-    return res.status(200).json(listings);
+    return res.status(200).json({ listings, total });
   } catch (error) {
     next(error);
   }
