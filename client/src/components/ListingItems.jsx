@@ -2,7 +2,20 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { MdLocationOn } from 'react-icons/md';
 
-export default function ListingItems({ listing }) {
+export default function ListingItems({ listing, highlight }) {
+  const highlightText = (text = '', term = '') => {
+    if (!term) return text
+    const regex = new RegExp(`(${term.replace(/[-\\/\\^$*+?.()|[\]{}]/g, '\\$&')})`, 'ig')
+    const parts = String(text).split(regex)
+    return parts.map((part, i) =>
+      regex.test(part) ? (
+        <mark key={i} className='bg-yellow-200 px-0.5'>{part}</mark>
+      ) : (
+        <span key={i}>{part}</span>
+      )
+    )
+  }
+
   return (
     <div className='bg-white shadow-md hover:shadow-lg
       transition-shadow overflow-hidden rounded-lg w-full 
@@ -17,7 +30,7 @@ export default function ListingItems({ listing }) {
       </Link>
       <div className='p-3 flex flex-col gap-2 w-full'>
         <p className='truncate text-lg font-semibold text-slate-700'>
-          {listing.name || 'Unnamed Listing'}
+          {highlight ? highlightText(listing.name || 'Unnamed Listing', highlight) : (listing.name || 'Unnamed Listing')}
         </p>
         <div className='flex items-center gap-1'>
           <MdLocationOn className='h-4 w-4 text-green-700' />
@@ -26,7 +39,7 @@ export default function ListingItems({ listing }) {
           </p>
         </div>
         <p className='text-sm text-gray-600 line-clamp-2'>
-          {listing.description || 'No description available.'}
+          {highlight ? highlightText(listing.description || 'No description available.', highlight) : (listing.description || 'No description available.')}
         </p>
         <p className='text-slate-500 mt-2 font-semibold'>
           $
