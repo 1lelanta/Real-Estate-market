@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import { useLocation, useNavigate } from 'react-router-dom'
 
-const BACKEND_URL = import.meta.env.VITE_BACKEND_URL
+const BACKEND_URL = import.meta.env.VITE_BACKEND_URL || '/api'
 
 const apiFetch = async (path, options = {}) => {
   const res = await fetch(`${BACKEND_URL}${path}`, options)
