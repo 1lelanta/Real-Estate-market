@@ -5,7 +5,7 @@ import { useDispatch } from 'react-redux'
 import { signInSuccess } from '../redux/user/userSlice'
 import { useNavigate } from 'react-router-dom'
 
-const BACKEND_URL = import.meta.env.VITE_BACKEND_URL || '/api'
+const BACKEND_URL = import.meta.env.VITE_BACKEND_URL || 'http://localhost:3000/api'
 
 const OAuth = () => {
   const navigate = useNavigate()
