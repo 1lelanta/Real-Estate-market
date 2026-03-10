@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState, useRef } from 'react'
 import { useNavigate, useLocation } from 'react-router-dom'
 import ListingItems from '../components/ListingItems'
 
@@ -20,7 +20,7 @@ export const Search = () => {
     parking: false,
     furnished: false,
     offer: false,
-    sort: 'created_at',
+    sort: 'createdAt',
     order: 'desc',
   })
   const [loading, setLoading] = useState(false)
@@ -43,7 +43,7 @@ export const Search = () => {
       parking: parkingFromUrl === 'true' ? true : false,
       furnished: furnishedFromUrl === 'true' ? true : false,
       offer: offerFromUrl === 'true' ? true : false,
-      sort: sortFromUrl || 'created_at',
+      sort: sortFromUrl || 'createdAt',
       order: orderFromUrl || 'desc',
     })
 
@@ -62,6 +62,21 @@ export const Search = () => {
 
     fetchListings()
   }, [location.search])
+
+  // Debounce for live search
+  const debounceRef = useRef(null)
+
+  useEffect(() => {
+    // When sidebarata changes, update the URL and fetch results (debounced)
+    if (debounceRef.current) clearTimeout(debounceRef.current)
+    debounceRef.current = setTimeout(() => {
+      const urlParams = new URLSearchParams()
+      Object.entries(sidebarata).forEach(([key, val]) => urlParams.set(key, val))
+      navigate(`/search?${urlParams.toString()}`, { replace: true })
+    }, 450)
+
+    return () => clearTimeout(debounceRef.current)
+  }, [sidebarata])
 
   const handleChange = (e) => {
     const { id, value, checked } = e.target
@@ -84,6 +99,7 @@ export const Search = () => {
     }
   }
 
+  // Keep a submit handler for accessibility, but live updates handle navigation
   const handleSubmit = (e) => {
     e.preventDefault()
     const urlParams = new URLSearchParams()
@@ -162,12 +178,7 @@ export const Search = () => {
           {/* Sort */}
           <div className='flex items-center gap-2'>
             <label className='font-semibold'>Sort: </label>
-            <select
-              id='sort_order'
-              defaultValue='created_at_desc'
-              onChange={handleChange}
-              className='border rounded-lg p-3'
-            >
+            <select id='sort_order' value={`${sidebarata.sort}_${sidebarata.order}`} onChange={handleChange} className='border rounded-lg p-3'>
               <option value='regularPrice_desc'>Price high to low</option>
               <option value='regularPrice_asc'>Price low to high</option>
               <option value='createdAt_desc'>Latest</option>
