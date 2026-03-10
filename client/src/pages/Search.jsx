@@ -1,6 +1,7 @@
 import React, { useEffect, useState, useRef } from 'react'
 import { useNavigate, useLocation } from 'react-router-dom'
 import ListingItems from '../components/ListingItems'
+import LoadingSpinner from '../components/LoadingSpinner'
 
 // Backend URL from environment variable
 const BACKEND_URL = import.meta.env.VITE_BACKEND_URL
@@ -28,6 +29,7 @@ export const Search = () => {
   const [total, setTotal] = useState(null)
   const [showmore, setShowmore] = useState(false)
   const LIMIT = 9
+  const isFetchingRef = useRef(false)
 
   useEffect(() => {
     const urlParams = new URLSearchParams(location.search)
@@ -50,6 +52,8 @@ export const Search = () => {
     })
 
     const fetchListings = async () => {
+      if (isFetchingRef.current) return
+      isFetchingRef.current = true
       setLoading(true)
       const searchQuery = urlParams.toString()
       try {
@@ -66,8 +70,10 @@ export const Search = () => {
         }
       } catch (err) {
         console.error(err)
+      } finally {
+        setLoading(false)
+        isFetchingRef.current = false
       }
-      setLoading(false)
     }
 
     fetchListings()
