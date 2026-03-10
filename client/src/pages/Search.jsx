@@ -25,7 +25,9 @@ export const Search = () => {
   })
   const [loading, setLoading] = useState(false)
   const [listing, setListing] = useState([])
+  const [total, setTotal] = useState(null)
   const [showmore, setShowmore] = useState(false)
+  const LIMIT = 9
 
   useEffect(() => {
     const urlParams = new URLSearchParams(location.search)
@@ -52,8 +54,16 @@ export const Search = () => {
       const searchQuery = urlParams.toString()
       try {
         const data = await apiFetch(`/listing/get?${searchQuery}`)
-        setListing(data)
-        setShowmore(data.length > 8)
+        // Support both old array response and new { listings, total }
+        const items = data.listings ?? data
+        const totalCount = data.total ?? null
+        setListing(items)
+        setTotal(totalCount)
+        if (totalCount !== null) {
+          setShowmore(totalCount > items.length)
+        } else {
+          setShowmore(items.length >= LIMIT)
+        }
       } catch (err) {
         console.error(err)
       }
@@ -113,12 +123,33 @@ export const Search = () => {
     urlParams.set('startIndex', startIndex)
     try {
       const data = await apiFetch(`/listing/get?${urlParams.toString()}`)
-      setListing([...listing, ...data])
-      if (data.length < 9) setShowmore(false)
+      const items = data.listings ?? data
+      const totalCount = data.total ?? null
+      setListing([...listing, ...items])
+      if (totalCount !== null) {
+        setTotal(totalCount)
+        if (listing.length + items.length >= totalCount) setShowmore(false)
+        else setShowmore(true)
+      } else {
+        if (items.length < LIMIT) setShowmore(false)
+      }
     } catch (err) {
       console.error(err)
     }
   }
+
+  // Infinite scroll: fetch more when near bottom
+  useEffect(() => {
+    const onScroll = () => {
+      if (loading || !showmore) return
+      if (window.innerHeight + window.scrollY >= document.body.offsetHeight - 300) {
+        onShowMorClick()
+      }
+    }
+
+    window.addEventListener('scroll', onScroll)
+    return () => window.removeEventListener('scroll', onScroll)
+  }, [loading, showmore, listing])
 
   return (
     <div className='flex flex-col md:flex-row'>
@@ -194,6 +225,9 @@ export const Search = () => {
         <h1 className='text-3xl font-semibold border-b p-3 text-slate-700 mt-5'>Listing results</h1>
 
         <div className='p-7 flex flex-wrap gap-2'>
+          {total !== null && (
+            <p className='text-sm text-slate-700 w-full'>Showing {listing.length} of {total} results</p>
+          )}
           {!loading && listing.length === 0 && <p className='text-lg text-slate-700'>No Listing found</p>}
           {loading && <p className='text-xl text-slate-700 text-center w-full'>Loading...</p>}
           {!loading && listing && listing.map((item) => <ListingItems key={item._id} listing={item} />)}
