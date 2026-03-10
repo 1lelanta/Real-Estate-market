@@ -6,10 +6,25 @@ import LoadingSpinner from '../components/LoadingSpinner'
 // Backend URL from environment variable
 const BACKEND_URL = import.meta.env.VITE_BACKEND_URL
 
-// Helper fetch function
+// Helper fetch function - safe JSON parsing and error handling
 const apiFetch = async (path, options = {}) => {
   const res = await fetch(`${BACKEND_URL}${path}`, options)
-  return res.json()
+  const text = await res.text()
+  if (!text) {
+    if (!res.ok) throw new Error(res.statusText || 'Network error')
+    return {}
+  }
+  try {
+    const data = JSON.parse(text)
+    if (!res.ok) {
+      const errMsg = data?.message || data?.error || res.statusText
+      throw new Error(errMsg || 'Request failed')
+    }
+    return data
+  } catch (err) {
+    if (res.ok) return text
+    throw err
+  }
 }
 
 const SignUp = () => {
